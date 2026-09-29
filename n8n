@@ -1,0 +1,757 @@
+{
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "86752ef1-5fb5-4f4f-b2c5-b41af076bda4",
+              "name": "Gmail-Nombre",
+              "value": "={{ $json.From }}",
+              "type": "string"
+            },
+            {
+              "id": "c45b04d4-7ca3-4e22-b1f3-d44683894918",
+              "name": "Tema",
+              "value": "={{ $json.Subject }}",
+              "type": "string"
+            },
+            {
+              "id": "1e1d0500-a632-4e4e-a9ec-7c6e576871cb",
+              "name": "Consulta",
+              "value": "={{ $json.snippet }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -480,
+        -96
+      ],
+      "id": "26a3f328-5cd7-4ced-befe-057f5dcdcaa9",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.Consulta }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "Consultas ",
+              "description": "Consultas de stock, precio, marcas, recomendaciones, etc"
+            },
+            {
+              "category": "Problemas",
+              "description": "Fallas de componentes, pc, problema de envio"
+            },
+            {
+              "category": "Contratos",
+              "description": "Patrocinios, arreglos de cantidad, empresas"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        -256,
+        -112
+      ],
+      "id": "2d185b4e-4c0a-4e73-b199-70dc19d33023",
+      "name": "Text Classifier",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.6-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -256,
+        112
+      ],
+      "id": "9c671508-0890-47b2-b67a-d81f57f9c221",
+      "name": "Google Gemini Chat Model",
+      "notesInFlow": false,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "aG6buBznzrnZIrop",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e510e291-a024-4ada-afb6-3ffe5dc98746",
+              "name": "Consulta",
+              "value": "=\n{{ $json.Consulta }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        176,
+        -320
+      ],
+      "id": "6f296d0d-bc2d-4853-b7f4-9f267850407a",
+      "name": "Consultas"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "408c0199-9814-4de6-8de5-860ea38cb4ed",
+              "name": "Consulta",
+              "value": "={{ $json.Consulta }}",
+              "type": "string"
+            },
+            {
+              "id": "d4295598-80dc-420c-9214-0bf763dffe61",
+              "name": "tema",
+              "value": "={{ $json.Tema }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        176,
+        -96
+      ],
+      "id": "603784ce-709f-475f-96c6-cf5f21c7c201",
+      "name": "Problemas"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3a6460e1-5789-4a9b-ad67-40e01c7f27b9",
+              "name": "Consulta",
+              "value": "={{ $json.Consulta }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        176,
+        112
+      ],
+      "id": "f16b5b9c-916f-4719-85d2-3ded69169c1c",
+      "name": "Contratos"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.6-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        464,
+        96
+      ],
+      "id": "daa34ba7-73ea-494d-bafb-5b840e711697",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "aG6buBznzrnZIrop",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {
+          "includeSpamTrash": true,
+          "includeDrafts": true,
+          "readStatus": "unread"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -720,
+        -96
+      ],
+      "id": "f0dcf4d1-8a8e-49aa-a822-3f35cf5bbe9c",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "V1t2V334aARTdBUu",
+          "name": "Gmail account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "dataSourceId": {
+          "__rl": true,
+          "value": "6456956e-c648-46ec-ac45-33024a1e74c5",
+          "mode": "list",
+          "cachedResultName": "Tickets",
+          "cachedResultUrl": "https://app.notion.com/p/7f60abd239324a16adb293ca742d14aa"
+        },
+        "title": "={{ $json.output.resumen }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Categoría|select",
+              "selectValue": "={{ $json.output.categoria }}"
+            },
+            {
+              "key": "Urgencia|select",
+              "selectValue": "={{ $json.output.urgencia }}"
+            },
+            {
+              "key": "Estado|select",
+              "selectValue": "En progreso"
+            },
+            {
+              "key": "Respuesta de la IA|rich_text",
+              "textContent": "={{ $json.output.respuesta_sugerida }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 3,
+      "position": [
+        1360,
+        -128
+      ],
+      "id": "296cfec9-5755-4c56-99df-4db85f628cba",
+      "name": "Create a database page",
+      "credentials": {
+        "notionApi": {
+          "id": "ap5Ex1mxRPzJBvpk",
+          "name": "Notion account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"categoria\": \"Hardware\",\n  \"urgencia\": \"Alta\",\n  \"sentimiento\": \"Negativo\",\n  \"producto_mencionado\": \"ASUS ROG Strix G16\",\n  \"resumen\": \"El cliente reporta que la notebook no enciende desde ayer.\",\n  \"respuesta_sugerida\": \"Lamentamos el inconveniente. Vamos a revisar tu caso y te contactaremos en las próximas horas para coordinar el diagnóstico.\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        608,
+        96
+      ],
+      "id": "661945e4-02d5-4134-9fec-1f424b8be6b8",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=\ntema:{{ $json.tema }}\nconsulta del cliente:{{ $json.Consulta }}",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        464,
+        -96
+      ],
+      "id": "33ec9f0a-35fc-4b00-b027-e24856818b7a",
+      "name": "Basic LLM Chain",
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "retryOnFail": false,
+      "notesInFlow": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "dataSourceId": {
+          "__rl": true,
+          "value": "6456956e-c648-46ec-ac45-33024a1e74c5",
+          "mode": "list",
+          "cachedResultName": "Tickets",
+          "cachedResultUrl": "https://app.notion.com/p/7f60abd239324a16adb293ca742d14aa"
+        },
+        "title": "={{ $('Gmail Trigger').item.json.Subject }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Estado|select",
+              "selectValue": "Error"
+            },
+            {
+              "key": "Respuesta de la IA|rich_text",
+              "textContent": "={{ $json.error.message }}\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 3,
+      "position": [
+        816,
+        96
+      ],
+      "id": "63761f13-4ca9-4b9d-b5dd-b706e58134cc",
+      "name": "Create a database page1",
+      "credentials": {
+        "notionApi": {
+          "id": "ap5Ex1mxRPzJBvpk",
+          "name": "Notion account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "926004e0-bea9-46da-b3b9-5b160c0c7f7d",
+              "leftValue": "={{ $json.output.urgencia }}",
+              "rightValue": "Alta",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "2db47e3a-a197-4ff7-94bd-9f7d7ae68e1f",
+              "leftValue": "={{ $json.output.urgencia }}",
+              "rightValue": "Critica",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        816,
+        -112
+      ],
+      "id": "e280a522-4e6a-4666-8f78-592d097baadb",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "cortesjoaco1@gmail.com",
+        "subject": "=🚨 Ticket urgente - {{ $json.output.categoria }}",
+        "message": "=Cliente: {{ $('Gmail Trigger').item.json.From }} Urgencia: {{ $json.output.urgencia }} Resumen: {{ $json.output.resumen }} Respuesta sugerida por la IA: {{ $json.output.respuesta_sugerida }} ¿Aprobamos el envío de esta respuesta al cliente?",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "Aprobado",
+            "disapproveLabel": "Desaprobado"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1024,
+        -224
+      ],
+      "id": "060755d2-ff27-441a-80ea-0f6971dbdd30",
+      "name": "Send message and wait for response",
+      "webhookId": "a39d7473-5903-4fdc-8c67-6335f8abacf7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "V1t2V334aARTdBUu",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "message": "={{ $('Basic LLM Chain').item.json.output.respuesta_sugerida }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1584,
+        0
+      ],
+      "id": "4cb121de-5e4d-4e41-9c6d-4cd14e2aa86d",
+      "name": "Reply to a message",
+      "webhookId": "4eba164d-a4d7-4b17-9f6c-6e2d92ab80cd",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "V1t2V334aARTdBUu",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c4201f41-60cd-47d5-9056-6d30cca36439",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1168,
+        192
+      ],
+      "id": "12f9f8af-7080-479b-9c3b-10a8c184ea06",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "dataSourceId": {
+          "__rl": true,
+          "value": "6456956e-c648-46ec-ac45-33024a1e74c5",
+          "mode": "list",
+          "cachedResultName": "Tickets",
+          "cachedResultUrl": "https://app.notion.com/p/7f60abd239324a16adb293ca742d14aa"
+        },
+        "title": "={{ $json.output.resumen }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Categoría|select",
+              "selectValue": "={{ $('Basic LLM Chain').item.json.output.categoria }}"
+            },
+            {
+              "key": "Urgencia|select",
+              "selectValue": "={{ $('Basic LLM Chain').item.json.output.urgencia }}"
+            },
+            {
+              "key": "Estado|select",
+              "selectValue": "Esperando Aprobación"
+            },
+            {
+              "key": "Respuesta de la IA|rich_text",
+              "textContent": "={{ $('Basic LLM Chain').item.json.output.respuesta_sugerida }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 3,
+      "position": [
+        1408,
+        208
+      ],
+      "id": "465e3923-c413-498c-a8a7-9ae74c108104",
+      "name": "Create a database page2",
+      "credentials": {
+        "notionApi": {
+          "id": "ap5Ex1mxRPzJBvpk",
+          "name": "Notion account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "Consultas",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Problemas",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Contratos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create a database page1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Problemas": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultas": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contratos": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create a database page1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create a database page1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create a database page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a database page": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message and wait for response": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply to a message": {
+      "main": [
+        []
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Create a database page",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create a database page2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a database page2": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "29306395-0019-4784-842a-6cd1478d8a27",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f82b0a3dee671d7f790ddb372c3d6ee3114eb8de6d44a7ea80b50002dbcd5449"
+  },
+  "nodeGroups": [],
+  "id": "nlm9g4k7CbvBKDrE",
+  "tags": []
+}
